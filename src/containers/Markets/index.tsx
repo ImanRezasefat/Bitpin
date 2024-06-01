@@ -1,7 +1,7 @@
 "use client";
 import { Card } from "@/components/Card";
 import { get } from "@/network";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/react";
 import { PaginateComponent } from "@/components/Pagination";
 
@@ -9,13 +9,36 @@ const Markets = () => {
   const [tabs, setTabs] = useState([]);
   const [allMarkets, setAllMarkets] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedTabIndex, setSelectedTabIndex] = useState(0);
+  const [touchStart, setTouchStart] = useState(null);
+  const [touchEnd, setTouchEnd] = useState(null);
+
+  // This logic of touch swipe should be extracted to a hook or sth
+  const minSwipeDistance = 50;
+
+  const onTouchStart = (e) => {
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const onTouchMove = (e) => setTouchEnd(e.targetTouches[0].clientX);
+
+  const onTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > minSwipeDistance;
+    const isRightSwipe = distance < -minSwipeDistance;
+    if (isLeftSwipe || isRightSwipe) {
+      setSelectedTabIndex(isLeftSwipe ? 1 : 0);
+    }
+  };
+
   const getMarkets = async () => {
     const marketsRes = await get("/mkt/markets/");
     setAllMarkets(marketsRes.results);
   };
   //set pagination
   useEffect(() => {
-    console.log("i set markets", allMarkets);
     const startIndex = (currentPage - 1) * 10;
     const itemsPerPage = 10;
     setTabs([
@@ -43,10 +66,13 @@ const Markets = () => {
     getMarkets();
   }, []);
   return (
-    <div>
+    <div
+      onTouchStart={onTouchStart}
+      onTouchMove={onTouchMove}
+      onTouchEnd={onTouchEnd}>
       <div className="flex h-screen w-full justify-center pt-24 px-4">
         <div className="w-full max-w-md">
-          <TabGroup>
+          <TabGroup key={selectedTabIndex} defaultIndex={selectedTabIndex}>
             <TabList className="flex gap-4" onClick={() => setCurrentPage(1)}>
               {tabs.map(({ name }) => (
                 <Tab
