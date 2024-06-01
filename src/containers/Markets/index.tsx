@@ -6,8 +6,8 @@ import { Tab, TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/react";
 import { PaginateComponent } from "@/components/Pagination";
 
 const Markets = () => {
-  const [tabs, setTabs] = useState([]);
-  const [allMarkets, setAllMarkets] = useState([]);
+  const [tabs, setTabs] = useState<any>([]);
+  const [allMarkets, setAllMarkets] = useState<any>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedTabIndex, setSelectedTabIndex] = useState(0);
   const [touchStart, setTouchStart] = useState(null);
@@ -16,12 +16,12 @@ const Markets = () => {
   // This logic of touch swipe should be extracted to a hook or sth
   const minSwipeDistance = 50;
 
-  const onTouchStart = (e) => {
+  const onTouchStart = (e: any) => {
     setTouchEnd(null);
     setTouchStart(e.targetTouches[0].clientX);
   };
 
-  const onTouchMove = (e) => setTouchEnd(e.targetTouches[0].clientX);
+  const onTouchMove = (e: any) => setTouchEnd(e.targetTouches[0].clientX);
 
   const onTouchEnd = () => {
     if (!touchStart || !touchEnd) return;
@@ -45,19 +45,19 @@ const Markets = () => {
       {
         name: "IRT",
         markets: allMarkets
-          .filter((market) => market.currency2.code === "IRT")
+          .filter((market: any) => market.currency2.code === "IRT")
           .slice(startIndex, startIndex + itemsPerPage),
         totalItems: allMarkets.filter(
-          (market) => market.currency2.code === "IRT"
+          (market: any) => market.currency2.code === "IRT"
         ).length,
       },
       {
         name: "USDT",
         markets: allMarkets
-          .filter((market) => market.currency2.code === "USDT")
+          .filter((market: any) => market.currency2.code === "USDT")
           .slice(startIndex, startIndex + itemsPerPage),
         totalItems: allMarkets.filter(
-          (market) => market.currency2.code === "IRT"
+          (market: any) => market.currency2.code === "IRT"
         ).length,
       },
     ]);
@@ -86,7 +86,7 @@ const Markets = () => {
               {tabs.map(({ name, markets, totalItems }) => (
                 <TabPanel key={name} className="rounded-xl bg-white/5 p-3">
                   <ul>
-                    {markets.map((market) => (
+                    {markets.map((market: any) => (
                       <div className="mt-2" key={market.id}>
                         <Card market={market} />
                       </div>
@@ -95,7 +95,7 @@ const Markets = () => {
                     <PaginateComponent
                       totalItems={totalItems}
                       itemsPerPage={10}
-                      returnCurrentPage={(page) => setCurrentPage(page)}
+                      returnCurrentPage={(page: number) => setCurrentPage(page)}
                     />
                   </ul>
                 </TabPanel>

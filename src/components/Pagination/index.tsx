@@ -5,7 +5,7 @@ export const PaginateComponent = ({
   totalItems,
   itemsPerPage,
   returnCurrentPage,
-}) => {
+}: any) => {
   const [currentPage, setCurrentPage] = useState(1);
   const totalPages = Math.ceil(totalItems / itemsPerPage);
 

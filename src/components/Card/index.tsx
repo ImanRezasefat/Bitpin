@@ -1,6 +1,4 @@
-import { CardProps } from "./card.types";
-
-export const Card = ({ market }: CardProps) => {
+export const Card = ({ market }: any) => {
   return (
     <div className="bg-white shadow-md rounded-lg p-6 max-w-sm mx-auto">
       <h2 className="text-xl font-semibold text-gray-800">{market.title}</h2>
