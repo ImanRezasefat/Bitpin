@@ -4,6 +4,7 @@ import { get } from "@/network";
 import React, { useEffect, useRef, useState } from "react";
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/react";
 import { PaginateComponent } from "@/components/Pagination";
+import { useRouter } from "next/navigation";
 
 const Markets = () => {
   const [tabs, setTabs] = useState<any>([]);
@@ -12,8 +13,9 @@ const Markets = () => {
   const [selectedTabIndex, setSelectedTabIndex] = useState(0);
   const [touchStart, setTouchStart] = useState(null);
   const [touchEnd, setTouchEnd] = useState(null);
+  const router = useRouter();
 
-  // This logic of touch swipe should be extracted to a hook or sth
+  //TODO The tab component and touch logic should be capsulated in a component
   const minSwipeDistance = 50;
 
   const onTouchStart = (e: any) => {
@@ -65,6 +67,10 @@ const Markets = () => {
   useEffect(() => {
     getMarkets();
   }, []);
+
+  const goToIdPage = (id) => {
+    router.push(`/${id}`);
+  };
   return (
     <div
       onTouchStart={onTouchStart}
@@ -87,7 +93,10 @@ const Markets = () => {
                 <TabPanel key={name} className="rounded-xl bg-white/5 p-3">
                   <ul>
                     {markets.map((market: any) => (
-                      <div className="mt-2" key={market.id}>
+                      <div
+                        className="mt-2"
+                        key={market.id}
+                        onClick={() => goToIdPage(market.id)}>
                         <Card market={market} />
                       </div>
                     ))}
